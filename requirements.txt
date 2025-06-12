@@ -24,3 +24,7 @@ sqlparse==0.4.3
 typing_extensions==4.9.0
 urllib3==1.26.14
 whitenoise==6.7.0
+django-storages==1.14
+boto3==1.28.53
+Pillow==11.2.1
+django-import-export==3.3.1
