@@ -1,5 +1,7 @@
 from django.db import models
+from django.conf import settings
 from accounts.models import CustomUser
+from django.urls import reverse
 
 class Artist(models.Model):
     user = models.ForeignKey(CustomUser, related_name='accounts', on_delete=models.CASCADE)
@@ -15,5 +17,7 @@ class Artist(models.Model):
         ordering = ["user__last_name"]
 
     def __str__(self):
-        return self.name
+        return self.user.first_name + " " + self.user.last_name
 
+    def get_absolute_url(self):
+        return reverse("creators:artist_detail", kwargs={"pk": self.pk})

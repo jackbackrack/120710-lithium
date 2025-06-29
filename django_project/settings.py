@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "creators",
     "events",
     "artworks",
+    "gallery",
+    'import_export',
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware

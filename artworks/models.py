@@ -1,6 +1,8 @@
 from django.db import models
+from django.conf import settings
 from events.models import Show
 from creators.models import Artist
+from django.urls import reverse
 
 class Artwork(models.Model):
     name = models.CharField(max_length=255)
@@ -25,4 +27,5 @@ class Artwork(models.Model):
     def __str__(self):
         return self.name
 
-
+    def get_absolute_url(self):
+        return reverse("artworks:artwork_detail", kwargs={"pk": self.pk})

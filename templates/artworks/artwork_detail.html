@@ -1,0 +1,42 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ artwork.name }}{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-4 gap-6">
+  <div class="col-span-2">
+    <img src="{{ artwork.image.url }}" class="rounded-xl" width="300" height="300">
+  </div>
+  <div class="col-span-2 p-6 bg-gray-100 rounded-xl">
+    <h2 class="text-sm">{% for artist in artwork.artists.all %}<a href="{% url 'creators:artist_detail' artist.id %}"> {{ artist }}</a>{% endfor %}
+    </h2>
+    <h2 class="text-sm">{{ artwork.name }}
+    </h2>
+    <h2 class="text-sm">
+      {% if artwork.start_year %}
+      {{ artwork.start_year }}-
+      {% endif %}
+      {{ artwork.end_year }}
+    </h2>
+    <br>
+    <p class="text-gray-500 text-sm"><strong>Medium: </strong>{{ artwork.medium }}</p>
+    <p class="text-gray-500 text-sm"><strong>Dimensions: </strong>{{ artwork.dimensions }}</p>
+    <p class="text-gray-500 text-sm"><strong>Price:</strong>
+      {% if artwork.price %}
+      ${{ artwork.price }}
+      {% endif %}
+      {% if artwork.pricing %}
+      {{ artwork.pricing }}
+      {% endif %}
+      {% if artwork.is_sold %}
+      <strong>sold</strong>
+      {% endif %}
+    </p>
+    {% if artwork.description %}
+    <p class="text-gray-500 text-sm"><strong>Description:</strong>
+      {{ artwork.description }}
+    </p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

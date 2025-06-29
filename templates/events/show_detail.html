@@ -1,0 +1,60 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ show.name }}{% endblock %}
+
+{% block content %}
+<div class="col-span-3">
+  <img src="{{ show.image.url }}" class="rounded-xl" width="300" height="300">
+</div>
+<h1 class="mb-6 text-2xl">{{ show.name }}</h1>
+<h2 class="mb-6">{{ show.start }} - {{ show.end }}</h2>
+<h2 class="mb-6">Curated by:
+{% for curator in curators %}
+  {{ curator.name }} blah
+{% endfor %}
+</h2>
+<p class="text-sm">{{ show.description|safe }}</p>
+{% for event in events %}
+<h2 class="mb-6">{{ event.name }} {{ event.start }} - {{ event.end }}</h2>
+{% endfor %}
+<br>
+<div class="grid grid-cols-4 gap-1">
+{% for artwork in artworks %}
+<div class="mt-1 px-2 py-2 bg-gray-100 rounded-xl">
+    <div>
+      <a href="{% url 'artworks:artwork_detail' artwork.id %}">
+        {% if artwork.image %}
+        <div>
+          <img src="{{ artwork.image.url }}" class="rounded-t-xl"  width="300" height="300">
+        </div>
+        {% endif %}
+        <div class="p-1 bg-white rounded-b-xl">
+          <h2 class="text-sm">{{ artwork.name }}
+          </h2>
+          <h2 class="text-sm">
+            {% if artwork.start_year %}
+            {{ artwork.start_year }}-
+            {% endif %}
+            {{ artwork.end_year }}
+          </h2>
+          <p class="text-gray-500 text-xs"><strong>Medium: </strong>{{ artwork.medium }}</p>
+          <p class="text-gray-500 text-xs"><strong>Dimensions: </strong>{{ artwork.dimensions }}</p>
+          <p class="text-gray-500 text-sm"><strong>Price:</strong>
+            {% if artwork.price %}
+            ${{ artwork.price }}
+            {% endif %}
+            {% if artwork.pricing %}
+            {{ artwork.pricing }}
+            {% endif %}
+            {% if artwork.is_sold %}
+            <strong>sold</strong>
+            {% endif %}
+          </p>
+        </div>
+      </a>
+    </div>
+</div>
+{% endfor %}
+</div>
+</div>
+{% endblock %}

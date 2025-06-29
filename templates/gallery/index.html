@@ -1,0 +1,36 @@
+{% extends '_base.html' %}
+
+{% block title %}
+  Welcome
+{% endblock %}
+  
+{% block content %}
+<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+  <h2 class="mb-12 text-2xl text-center">Shows</h2>
+  <div class="grid grid-cols-3 gap-3">
+    {% for show in shows %}
+    <div>
+      <a href="{% url 'events:show_detail' show.id %}">
+        <div>
+          <img src="{{ show.image.url }}" class="rounded-t-xl" width="300" height="300">
+        </div>
+        <div class="p-6 bg-white rounded-b-xl">
+          <h2 class="text-2xl">{{ show.name }}</h2>
+          <h2 class="mb-6">Curated by:
+          {% for curator in show.curators_set.all %}
+            {{ curator.name }} blah
+          {% endfor %}
+          </h2>
+          <h3 class="mb-6">Opening {{ show.start }} - {{ show.end }}</h3>
+          {% for event in show.events_set.all %}
+          <h3 class="mb-6">{{ event.name }} {{ event.start }} - {{ event.end }}</h2>
+          {% endfor %}
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% endblock %}

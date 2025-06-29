@@ -13,3 +13,9 @@ media
 
 # Virtual environment
 .venv
+
+#my stuff
+artist_images
+piece_images
+show_images
+event_images
