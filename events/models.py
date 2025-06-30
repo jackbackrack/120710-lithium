@@ -1,5 +1,6 @@
 from django.db import models
 from creators.models import Artist
+from django.urls import reverse
 
 class Show(models.Model):
     name = models.CharField(max_length=255)
@@ -15,6 +16,9 @@ class Show(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("events:show_detail", kwargs={"pk": self.pk})
 
 class Event(models.Model):
     name = models.CharField(max_length=255)
@@ -32,3 +36,5 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("events:event_detail", kwargs={"pk": self.pk})
