@@ -10,9 +10,9 @@
     {% endif %}
   </div>
   <div class="col-span-2 p-6 bg-gray-100 rounded-xl">
-    <h2 class="text-sm">{% for artist in artwork.artists.all %}<a href="{% url 'creators:artist_detail' artist.id %}"> {{ artist }}</a>{% endfor %}
-    </h2>
     <h2 class="text-sm">{{ artwork.name }}
+    </h2>
+    <h2 class="text-sm">{% for artist in artwork.artists.all %}<a href="{% url 'creators:artist_detail' artist.id %}"> {{ artist }}</a>{% endfor %}
     </h2>
     <h2 class="text-sm">
       {% if artwork.start_year %}
@@ -39,6 +39,12 @@
       {{ artwork.description }}
     </p>
     {% endif %}
+  </div>
+  <div>
+    <p><a href="{% url 'artworks:artwork_edit' artwork.pk %}">Edit</a>
+       <a href="{% url 'artworks:artwork_delete' artwork.pk %}">Delete</a>
+    </p>
+    <p>Back to <a href="{% url 'artworks:artwork_list' %}">All Artworks</a>.</p>
   </div>
 </div>
 {% endblock %}

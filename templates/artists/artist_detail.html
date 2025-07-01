@@ -24,11 +24,13 @@
     <p class="text-gray-500 text-sm"><strong>Statement: </strong>{{ artist.statement }}</p>
     {% endif %}
   </div>
+  {% if user.is_authenticated %}
   <div>
     <p><a href="{% url 'creators:artist_edit' artist.pk %}">Edit</a>
        <a href="{% url 'creators:artist_delete' artist.pk %}">Delete</a>
     </p>
     <p>Back to <a href="{% url 'creators:artist_list' %}">All Artists</a>.</p>
   </div>
+  {% endif %}
 </div>
 {% endblock %}

@@ -103,6 +103,7 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = "events/event_edit.html"
 
     def test_func(self):
+        obj = self.get_object()
         for curator in obj.show.curators.all():
             if curator.user == self.request.user:
                 return True

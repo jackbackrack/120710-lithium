@@ -6,15 +6,16 @@
 {% if user.is_authenticated %}
   <a href="{% url 'events:show_new' %}">+ New</a>
 {% endif %}
+<div class="grid">
+<div class="grid-cards">
 {% for show in show_list %}
-<div class="card">
-  <div class="card-header">
+<div class="grid-cards-inner">
+  <div class="card-header text-center">
     <span class="fw-bold">
-      <!-- add link here! -->
       <a href="{{ show.get_absolute_url }}">{{ show.name }}</a>
     </span> &middot;
   </div>
-  <div class="card-body">
+  <div class="card-body text-center">
     {% if show.image %}
     <img src="{{ show.image.url }}" class="rounded-xl" width="100" height="100">
     {% endif %}
@@ -26,4 +27,6 @@
 </div>
 <br />
 {% endfor %}
+</div>
+</div>
 {% endblock content %}
