@@ -1,18 +1,19 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 
 from .models import Artist
 
-class ArtistListView(ListView):
+class ArtistListView(LoginRequiredMixin, ListView):
     model = Artist
     template_name = "artists/artist_list.html"
 
-class ArtistDetailView(DetailView):
+class ArtistDetailView(LoginRequiredMixin, DetailView):
     model = Artist
     template_name = "artists/artist_detail.html"
 
-class ArtistUpdateView(UpdateView):
+class ArtistUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Artist
     fields = (
         "phone",
@@ -24,12 +25,20 @@ class ArtistUpdateView(UpdateView):
         )
     template_name = "artists/artist_edit.html"
 
-class ArtistDeleteView(DeleteView):
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user == self.request.user
+
+class ArtistDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Artist
     template_name = "artists/artist_delete.html"
-    success_url = reverse_lazy("artist_list")
+    success_url = reverse_lazy("creators:artist_list")
 
-class ArtistCreateView(CreateView):
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user == self.request.user
+
+class ArtistCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Artist
     fields = (
         "phone",
@@ -40,6 +49,14 @@ class ArtistCreateView(CreateView):
         "image",
         )
     template_name = "artists/artist_new.html"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        print('user set to', self.request.user)
+        return super().form_valid(form)
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='artist').exists()
 
 # from django.shortcuts import render, get_object_or_404
 # 

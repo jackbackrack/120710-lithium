@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
@@ -21,15 +22,15 @@ def show_detail_all(request, pk):
         'curators': curators,
     })
 
-class ShowListView(ListView):
+class ShowListView(LoginRequiredMixin, ListView):
     model = Show
     template_name = "events/show_list.html"
 
-class ShowDetailView(DetailView):
+class ShowDetailView(LoginRequiredMixin, DetailView):
     model = Show
     template_name = "events/show_detail.html"
 
-class ShowUpdateView(UpdateView):
+class ShowUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Show
     fields = (
         "name",
@@ -41,12 +42,26 @@ class ShowUpdateView(UpdateView):
         )
     template_name = "events/show_edit.html"
 
-class ShowDeleteView(DeleteView):
+    def test_func(self):
+        obj = self.get_object()
+        for curator in obj.curators:
+            if curator.user == self.request.user:
+                return True
+        return False
+
+class ShowDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Show
     template_name = "events/show_delete.html"
-    success_url = reverse_lazy("show_list")
+    success_url = reverse_lazy("events:show_list")
 
-class ShowCreateView(CreateView):
+    def test_func(self):
+        obj = self.get_object()
+        for curator in obj.curators.all():
+            if curator.user == self.request.user:
+                return True
+        return False
+
+class ShowCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Show
     fields = (
         "name",
@@ -58,16 +73,23 @@ class ShowCreateView(CreateView):
         )
     template_name = "events/show_new.html"
 
+    def test_func(self):
+        return self.request.user.groups.filter(name='curator').exists()
 
-class EventListView(ListView):
+    # # TODO: need to make artist
+    # def form_valid(self, form):
+    #     form.instance.curators = [ self.request.user ]
+    #     return super().form_valid(form)
+
+class EventListView(LoginRequiredMixin, ListView):
     model = Event
     template_name = "events/event_list.html"
 
-class EventDetailView(DetailView):
+class EventDetailView(LoginRequiredMixin, DetailView):
     model = Event
     template_name = "events/event_detail.html"
 
-class EventUpdateView(UpdateView):
+class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Event
     fields = (
         "name",
@@ -80,12 +102,25 @@ class EventUpdateView(UpdateView):
         )
     template_name = "events/event_edit.html"
 
-class EventDeleteView(DeleteView):
+    def test_func(self):
+        for curator in obj.show.curators.all():
+            if curator.user == self.request.user:
+                return True
+        return False
+
+class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Event
     template_name = "events/event_delete.html"
-    success_url = reverse_lazy("event_list")
+    success_url = reverse_lazy("events:event_list")
 
-class EventCreateView(CreateView):
+    def test_func(self):
+        obj = self.get_object()
+        for curator in obj.show.curators.all():
+            if curator.user == self.request.user:
+                return True
+        return False
+
+class EventCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Event
     fields = (
         "name",
@@ -98,3 +133,7 @@ class EventCreateView(CreateView):
         )
     template_name = "events/event_new.html"
     
+    def test_func(self):
+        return self.request.user.groups.filter(name='curator').exists()
+
+

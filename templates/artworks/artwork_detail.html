@@ -5,7 +5,9 @@
 {% block content %}
 <div class="grid grid-cols-4 gap-6">
   <div class="col-span-2">
+    {% if artwork.image %}
     <img src="{{ artwork.image.url }}" class="rounded-xl" width="300" height="300">
+    {% endif %}
   </div>
   <div class="col-span-2 p-6 bg-gray-100 rounded-xl">
     <h2 class="text-sm">{% for artist in artwork.artists.all %}<a href="{% url 'creators:artist_detail' artist.id %}"> {{ artist }}</a>{% endfor %}
