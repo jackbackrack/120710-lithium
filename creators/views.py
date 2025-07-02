@@ -27,7 +27,7 @@ class ArtistUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         obj = self.get_object()
-        return obj.user == self.request.user
+        return obj.user == self.request.user or self.request.user.is_superuser
 
 class ArtistDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Artist
@@ -36,7 +36,7 @@ class ArtistDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         obj = self.get_object()
-        return obj.user == self.request.user
+        return obj.user == self.request.user or self.request.user.is_superuser
 
 class ArtistCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Artist
@@ -56,7 +56,7 @@ class ArtistCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return super().form_valid(form)
 
     def test_func(self):
-        return self.request.user.groups.filter(name='artist').exists()
+        return self.request.user.is_superuser or self.request.user.groups.filter(name='artist').exists()
 
 # from django.shortcuts import render, get_object_or_404
 # 

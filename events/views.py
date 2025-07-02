@@ -47,7 +47,7 @@ class ShowUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         for curator in obj.curators:
             if curator.user == self.request.user:
                 return True
-        return False
+        return self.request.user.is_superuser
 
 class ShowDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Show
@@ -59,7 +59,7 @@ class ShowDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         for curator in obj.curators.all():
             if curator.user == self.request.user:
                 return True
-        return False
+        return self.request.user.is_superuser
 
 class ShowCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Show
@@ -74,7 +74,7 @@ class ShowCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     template_name = "events/show_new.html"
 
     def test_func(self):
-        return self.request.user.groups.filter(name='curator').exists()
+        return self.request.user.groups.filter(name='curator').exists() or self.request.user.is_superuser
 
     # # TODO: need to make artist
     # def form_valid(self, form):
@@ -107,7 +107,7 @@ class EventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         for curator in obj.show.curators.all():
             if curator.user == self.request.user:
                 return True
-        return False
+        return self.request.user.is_superuser
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Event
@@ -119,7 +119,7 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         for curator in obj.show.curators.all():
             if curator.user == self.request.user:
                 return True
-        return False
+        return self.request.user.is_superuser
 
 class EventCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Event

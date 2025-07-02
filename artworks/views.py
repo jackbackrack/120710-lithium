@@ -38,7 +38,7 @@ class ArtworkUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         for artist in obj.artists.all():
             if artist.user == self.request.user:
                 return True
-        return False
+        return self.request.user.is_superuser
 
 class ArtworkDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Artwork
@@ -50,7 +50,7 @@ class ArtworkDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         for artist in obj.artists.all():
             if artist.user == self.request.user:
                 return True
-        return False
+        return self.request.user.is_superuser
 
 class ArtworkCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Artwork
@@ -78,5 +78,5 @@ class ArtworkCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     #     return super().form_valid(form)
 
     def test_func(self):
-        return self.request.user.groups.filter(name='artist').exists()
+        return self.request.user.is_superuser or self.request.user.groups.filter(name='artist').exists()
 
