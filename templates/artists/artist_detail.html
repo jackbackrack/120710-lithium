@@ -32,5 +32,31 @@
     <p>Back to <a href="{% url 'creators:artist_list' %}">All Artists</a>.</p>
   </div>
   {% endif %}
+  <h3>Artworks</h3>
+  <div class="grid">
+  <div class="grid-cards">
+  {% for artwork in artist.artworks.all %}
+  <div class="grid-cards-inner">
+    <div class="card-header text-center">
+      <span class="fw-bold">
+        <a href="{{ artwork.get_absolute_url }}">{{ artwork.name }}</a>
+      </span> &middot;
+    </div>
+    <div class="card-body text-center">
+      {% if artwork.image %}
+      <img src="{{ artwork.image.url }}" class="rounded-xl" width="100" height="100">
+      {% endif %}
+    </div>
+    {% if user.is_authenticated %}
+    <div class="card-footer text-center text-muted">
+      <a href="{% url 'artworks:artwork_edit' artwork.pk %}">Edit</a>
+      <a href="{% url 'artworks:artwork_delete' artwork.pk %}">Delete</a>
+    </div>
+    {% endif %}
+  </div>
+  <br />
+  {% endfor %}
+  </div>
+  </div>
 </div>
 {% endblock %}

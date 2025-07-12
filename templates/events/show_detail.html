@@ -25,6 +25,15 @@
     {{ event.start }} - {{ event.end }}</h3>
     {% endfor %}
   </div>
+  {% if user.is_authenticated %}
+  <div>
+    <p><a href="{% url 'events:show_edit' show.pk %}">Edit</a>
+       <a href="{% url 'events:show_delete' show.pk %}">Delete</a>
+    </p>
+    <p>Back to <a href="{% url 'events:show_list' %}">All Shows</a>.</p>
+  </div>
+  {% endif %}
+  <h3>Artworks</h3>
   <div class="grid">
   <div class="grid-cards">
   {% for artwork in show.artworks.all %}
@@ -50,13 +59,33 @@
   {% endfor %}
   </div>
   </div>
-  {% if user.is_authenticated %}
-  <div>
-    <p><a href="{% url 'events:show_edit' show.pk %}">Edit</a>
-       <a href="{% url 'events:show_delete' show.pk %}">Delete</a>
-    </p>
-    <p>Back to <a href="{% url 'events:show_list' %}">All Shows</a>.</p>
+  <h3>Artists</h3>
+  <div class="grid">
+  <div class="grid-cards">
+  <!-- todo: remove dups and sort -->
+  {% for artwork in show.artworks.all %}
+  {% for artist in artwork.artists.all %}
+  <div class="grid-cards-inner">
+    <div class="card-header">
+      <span class="fw-bold">
+        <!-- add link here! -->
+        <a href="{{ artist.get_absolute_url }}">{{ artist.user.first_name }} {{ artist.user.last_name }}</a>
+      </span> &middot;
+    </div>
+    <div class="card-body">
+      {% if artist.image %}
+      <img src="{{ artist.image.url }}" class="rounded-xl" width="100" height="100">
+      {% endif %}
+    </div>
+    <div class="card-footer text-center text-muted">
+      <a href="{% url 'creators:artist_edit' artist.pk %}">Edit</a>
+      <a href="{% url 'creators:artist_delete' artist.pk %}">Delete</a>
+    </div>
   </div>
-  {% endif %}
+  <br />
+  {% endfor %}
+  {% endfor %}
+  </div>
+  </div>
 </div>
 {% endblock %}

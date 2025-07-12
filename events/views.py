@@ -12,9 +12,9 @@ def show_detail_all(request, pk):
     show = get_object_or_404(Show, pk=pk)
     curators = show.curators.all()
     # artworks = Artwork.objects.filter(artwork__shows == pk)
-    artworks = show.artwork_set.all()
+    artworks = show.artworks.all()
     # events = Event.objects.filter(show == pk)
-    events = show.event_set.all()
+    events = show.event.all()
     return render(request, 'events/show_detail.html', {
         'show': show,
         'events': events,

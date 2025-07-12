@@ -7,7 +7,7 @@ from django.urls import reverse
 class Artwork(models.Model):
     name = models.CharField(max_length=255)
     shows = models.ManyToManyField(Show, related_name="artworks")
-    artists = models.ManyToManyField(Artist, related_name="artists")
+    artists = models.ManyToManyField(Artist, related_name="artworks")
     end_year = models.IntegerField()
     start_year = models.IntegerField(blank=True, null=True)
     medium = models.TextField(blank=True, null=True)
